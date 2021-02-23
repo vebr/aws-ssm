@@ -8,8 +8,8 @@ AWS_SECRET_KEY    ?=
 RELEASE_NAME      ?= aws-ssm
 RELEASE_NAMESPACE ?= kube-system
 
-DOCKER_REPO       ?= cmattoon
-DOCKER_IMAGE      ?= aws-ssm
+DOCKER_REPO       ?= skye
+DOCKER_IMAGE      ?= aws-ssm-inject
 DOCKER_TAG        ?= $(strip $(shell git describe --tags --always --dirty))
 
 GIT_REPO          ?= $(DOCKER_REPO)
@@ -89,7 +89,9 @@ install: ## Install Helm Chart
 install:
 	helm upgrade --install $(RELEASE_NAME) \
 		--namespace $(RELEASE_NAMESPACE) \
+		--set image.name=$(DOCKER_REPO)/$(DOCKER_IMAGE) \
 		--set image.tag=$(DOCKER_TAG) \
+		--set image.local="true" \
 	 	--set aws.region=$(AWS_REGION) \
 	 	--set aws.access_key=$(AWS_ACCESS_KEY) \
 	 	--set aws.secret_key=$(AWS_SECRET_KEY) \
