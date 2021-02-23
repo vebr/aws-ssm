@@ -20,10 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
-
 	anno "github.com/cmattoon/aws-ssm/pkg/annotations"
 	"github.com/cmattoon/aws-ssm/pkg/provider"
+	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -85,7 +84,7 @@ func NewSecret(sec v1.Secret, p provider.Provider, secret_name string, secret_na
 		}
 	} else if s.ParamType == "Directory" {
 		// Directory: Set each sub-key
-		all_params, err := p.GetParameterDataByPath(s.ParamName, decrypt, roleArn)
+		all_params, err := p.GetParameterDataByPath(s.ParamName, true, roleArn)
 		if err != nil {
 			return nil, err
 		}
